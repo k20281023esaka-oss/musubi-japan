@@ -46,7 +46,10 @@ npm run build      # 公開用 dist/ を作る
 - **下のメニュー（`#bnav`）**：ホーム ｜ 食べる ｜ 📷カメラ判定（真ん中の丸ボタン）｜ 地図 ｜ マイページ。切りかえは `navGo(k)`、選択状態は `syncNav()`。
 - **場面（phase）**：`home` → `quiz`（診断）→ `result`。`showPhase(ph)` で切りかえ。
 - **result の中のタブ（`tab`）**：`eat`（食べる）・`scan`（撮って判定）・`trip`（日程）・`plan`（1日の予定）・`map`・`me`（マイページ）・`cafe`・`see`（観光・体験）・`inaka`（田舎）・`buy`・`guide`・`tell`・`feed`（みんなの声。今は非表示 `FEED_ON=false`）。描画は `render()` の中の `if(tab==="...")`。
-- **診断しなくても使える**：「食べる」は、診断前なら ①宗教を選ぶ（`relFirstHTML`）→ ②姫路か浅草を選ぶ（`cityFirstHTML`）→ お店、の順。診断前に結果画面を見せるときは `peekRes=true` で `showPhase("result")` を呼ぶ（`done` を true にしないため）。
+- **診断は1つだけ**（2026/11/18 に統一）：「食べる」「1日の流れ」なども、診断前なら同じ診断（`drawQ`）へ進む。診断前の「食べる」タブは `eatStartHTML`（診断へのボタン）だけ。地図・カメラ判定・マイページは診断前でも見られる（`peekRes=true` で `showPhase("result")`。`done` は true にしない）。古い `relFirstHTML` / `cityFirstHTML` は今は使っていない。
+- **診断の質問の順番**：誰と → 街（姫路／浅草、`data-qcity`）→ 食事 → 予算 → 宗教 → 宗教ごとの質問 → 入るかもしれない食材 → 生もの → アレルギー（自由記述あり）→ お店の種類 → 好き → 苦手（自由記述あり）→ ほかに探すもの → 確認。
+- **自由記述**：`freeRead` が `LBL` 辞書（`scanMatch`）で食材を見つける。AIは使わない。アレルギーで見つかった食材は `S.allergyX`（✕）、苦手は `S.dislikeX`（△）になる。分からない言葉は `S.allergyTxt` / `S.dislikeTxt` のまま、お店に見せる文（`dietText`）に入る。
+- **1日の流れ（`tab="plan"`）の入口**：ホームの横長ボタン（`data-qa="plan"`）と、診断のあとの「食べる」の上のバナー（`planBannerHTML`）。
 
 ## データ（すべて index.html の中）
 
@@ -111,7 +114,7 @@ npm run build      # 公開用 dist/ を作る
 
 ## これからやりたいこと
 
-1. ~~GitHub Pages で公開する~~ → しくみは作った（`.github/workflows/pages.yml`）。本人が GitHub に上げれば公開される
+1. ~~GitHub Pages で公開する~~ → 2026/11/18 公開済み：https://k20281023esaka-oss.github.io/musubi-japan/ 。本人はブラウザの「Upload files」でファイルを上げている。この方法では「.」で始まるファイル（`.github` など）は上がらないので、`.github/workflows/pages.yml` を直すときは GitHub の画面で直接編集してもらう。**作業フォルダはデスクトップの `musubi-japan-最新`**（ダウンロードの `musubi-japan` は 11/17 の古い版なので使わない）
 2. ~~ホーム画面に追加できるようにする（PWA）~~ → できた。service worker の登録は公開版だけ（Claudeのページと file:// ではしない）
 3. 写真を増やす（撮影リストの番号のファイル名で `img/` に入れる）
 4. 宗教団体のヒアリング結果で判定と説明を直し、`VERIFY` に記録する
