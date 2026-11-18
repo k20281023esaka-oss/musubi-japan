@@ -45,7 +45,7 @@ npm run build      # 公開用 dist/ を作る
 
 - **下のメニュー（`#bnav`）**：ホーム ｜ 食べる ｜ 📷カメラ判定（真ん中の丸ボタン）｜ 地図 ｜ マイページ。切りかえは `navGo(k)`、選択状態は `syncNav()`。
 - **場面（phase）**：`home` → `quiz`（診断）→ `result`。`showPhase(ph)` で切りかえ。
-- **result の中のタブ（`tab`）**：`eat`（食べる）・`scan`（撮って判定）・`trip`（日程）・`plan`（1日の予定）・`map`・`me`（マイページ）・`cafe`・`see`（観光・体験）・`inaka`（田舎）・`buy`・`guide`・`tell`・`feed`（みんなの声。今は非表示 `FEED_ON=false`）。描画は `render()` の中の `if(tab==="...")`。
+- **result の中のタブ（`tab`）**：`eat`（食べる）・`scan`（撮って判定）・`trip`（日程）・`plan`（1日の流れ。画面の名前は「1日の流れ」にそろえた）・`map`・`me`（マイページ）・`cafe`・`see`（観光・体験）・`inaka`（田舎）・`buy`・`guide`・`tell`・`feed`（みんなの声。今は非表示 `FEED_ON=false`）。描画は `render()` の中の `if(tab==="...")`。
 - **診断は1つだけ**（2026/11/18 に統一）：「食べる」「1日の流れ」なども、診断前なら同じ診断（`drawQ`）へ進む。診断前の「食べる」タブは `eatStartHTML`（診断へのボタン）だけ。地図・カメラ判定・マイページは診断前でも見られる（`peekRes=true` で `showPhase("result")`。`done` は true にしない）。古い `relFirstHTML` / `cityFirstHTML` は今は使っていない。
 - **診断の質問の順番**：誰と → 街（姫路／浅草、`data-qcity`）→ 食事 → 予算 → 宗教 → 宗教ごとの質問 → 入るかもしれない食材 → 生もの → アレルギー（自由記述あり）→ お店の種類 → 好き → 苦手（自由記述あり）→ ほかに探すもの → 確認。
 - **自由記述**：`freeRead` が `LBL` 辞書（`scanMatch`）で食材を見つける。AIは使わない。アレルギーで見つかった食材は `S.allergyX`（✕）、苦手は `S.dislikeX`（△）になる。分からない言葉は `S.allergyTxt` / `S.dislikeTxt` のまま、お店に見せる文（`dietText`）に入る。
@@ -86,6 +86,8 @@ npm run build      # 公開用 dist/ を作る
 ## AIについて（大事）
 
 - AI（日程・カメラ判定・質問）は **Claude のページの中でだけ動く**（`window.claude.use("sample")` → `sampleRef`）。公開版では `sampleRef` が `null` になり、自動の代わりの動きになる。
+- **公開版（`sampleRef` が null）では、AIを使う説明やボタンを出さない。** 1日の流れの「AIで回り方を作る」、マイページの「AIに質問」、くわしい画面の「これについてAIに質問」、お店の人と話すカードの自由入力、メニュー写真の翻訳は、`sampleRef` があるときだけ出す。Pro の AI 機能は公開版では「準備中」と表示する。新しく AI の機能を足すときも同じようにする。
+- **1日の流れの予算**：おすすめメニューの文の値段（「4,000円」など）を `recYen` で読み、予算をこえるお店は `overYen` で後回しにする。予算に合うお店がないときだけ、そう書いて出す。
 - 公開版で AI を使うなら、**APIキーは絶対に index.html に書かない。** Cloudflare Workers などに小さなサーバーを作り、キーはそこだけに置く。回数制限も入れる。まだ作っていない。
 
 ## 言葉（5か国語：ja / en / id / zh / hi）
