@@ -1,0 +1,49 @@
+# GitHub Pages に自動で公開する
+# main ブランチに push すると：動作チェック（npm test）→ 写真入りの dist/ を作る → 公開
+# 動作チェックで NG が出たら公開しない（前の版がそのまま残る）
+name: 公開（GitHub Pages）
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 動作チェックの準備
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+      - name: 動作チェック
+        run: npm test
+      - name: 公開用 dist/ を作る
+        run: python3 tools/embed_photos.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
