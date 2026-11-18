@@ -1,0 +1,16 @@
+{
+  "name": "Musubi Japan",
+  "short_name": "Musubi",
+  "description": "宗教や食の決まりがある旅行者が、姫路と浅草で食べられるお店・料理・観光地を探せるサイト",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6EFE2",
+  "theme_color": "#1E3557",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

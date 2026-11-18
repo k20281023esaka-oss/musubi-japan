@@ -1,0 +1,45 @@
+Musubi Japan に Googleログインを入れる方法（Firebase）
+
+※ ログインは「自分のサーバーに置く版」だけで動きます（Claudeのページでは出ません）。
+※ 設定するまでは、マイページのログインのボタンは「準備中」と表示されます。サイトの他の機能はそのまま使えます。
+※ 個人のGoogleアカウントで作るのがおすすめ（学校のアカウントは外部連携が止められていることがある）。
+※ 未成年の場合は、保護者の人と一緒に作ってください。
+
+1. Firebaseのプロジェクトを作る
+   https://console.firebase.google.com を開く →「プロジェクトを追加」→ 名前を「musubi-japan」などにして作成（Googleアナリティクスはオフでよい）
+
+2. ウェブアプリを登録する
+   プロジェクトのトップで「</>（ウェブ）」を押す → アプリ名を入れて登録
+   → 表示される firebaseConfig の中の apiKey / authDomain / projectId / appId をメモ
+
+3. Googleログインをオンにする
+   左のメニュー「Authentication」→「始める」→「Sign-in method」→「Google」を有効にして保存
+   「Settings」→「承認済みドメイン」に、サイトを置くドメイン（例：musubi-japan.example.com）を追加
+   ※ VS Codeでファイルを直接開いた状態（file://）ではログインできません。サーバーに置くか、ローカルサーバー（http://localhost）で試してください。
+
+4. データの保存場所を作る
+   左のメニュー「Firestore Database」→「データベースを作成」→ 場所は asia-northeast1（東京）など
+   「ルール」タブに次を貼り付けて「公開」（本人だけが自分のデータを読み書きできる設定）：
+
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{uid} {
+         allow read, write: if request.auth != null && request.auth.uid == uid;
+       }
+     }
+   }
+
+5. firebase-config.js に設定を書く
+   index.html と同じフォルダにある firebase-config.js を開き、2でメモした4つの値を "" の中に貼りつけて保存する：
+     apiKey: "AIza...",
+     authDomain: "musubi-japan.firebaseapp.com",
+     projectId: "musubi-japan",
+     appId: "1:...:web:..."
+   ※ index.html は書きかえなくて大丈夫です。
+
+6. サーバーに置いて、マイページの「Googleでログイン」を押して確認
+
+保存されるもの：保存したお店、診断の答え、言語（users/ログインした人のID に保存）
+保存しないもの：名前やメールアドレスはGoogleから表示用に受け取るだけで、データベースには保存しません。
+本番で公開するときは、プライバシーポリシー（個人情報の扱い）のページも用意してください。

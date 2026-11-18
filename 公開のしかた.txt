@@ -1,0 +1,51 @@
+Musubi Japan を GitHub Pages で公開する方法
+
+公開すると、だれでもスマホで https://（あなたのGitHubの名前）.github.io/musubi-japan/ を開けるようになります。
+スマホで開いて「ホーム画面に追加」すると、アプリのように使えます（電波がなくても前に開いたページは出ます）。
+
+※ 未成年の場合は、GitHub のアカウント作りは保護者の人と一緒にしてください。
+※ 公開すると、だれでも見られます。個人のメールアドレスなどがファイルに入っていないか確かめてから公開しましょう。
+
+────────────────────────
+はじめの1回だけ
+────────────────────────
+1. GitHub のアカウントを作る
+   https://github.com を開いて「Sign up」。
+
+2. 入れものを作る
+   右上の「＋」→「New repository」
+   Repository name：musubi-japan
+   Public を選ぶ（無料で Pages を使うには Public が必要）→「Create repository」
+
+3. ファイルを上げる（いちばんかんたんな方法：ブラウザから）
+   できた画面の「uploading an existing file」を押す
+   → musubi-japan フォルダの「中身」を全部ドラッグして入れる
+     （node_modules と dist は入れなくてよい）
+   ※ .github フォルダは Mac では見えないことがあります。
+     Finder で Command + Shift + . （ピリオド）を押すと見えるようになります。
+   →「Commit changes」
+
+4. 公開の設定をする
+   入れものの「Settings」→ 左の「Pages」
+   →「Build and deployment」の Source を「GitHub Actions」にする
+
+5. 待つ
+   「Actions」タブで、緑のチェックが出たら公開完了（3〜5分くらい）。
+   赤い✕のときは、動作チェックで NG が出ています。Claude に✕の画面を見せて相談してください。
+
+6. スマホで開く
+   https://（あなたのGitHubの名前）.github.io/musubi-japan/
+   iPhone：Safari の共有ボタン →「ホーム画面に追加」
+   Android：Chrome のメニュー →「ホーム画面に追加」（または「アプリをインストール」）
+
+────────────────────────
+直したあと
+────────────────────────
+index.html などを直したら、同じように GitHub に上げなおすだけです。
+上げると自動で、動作チェック → 写真の埋めこみ → 公開 をしてくれます。
+
+────────────────────────
+Googleログインを使うとき
+────────────────────────
+「Googleログインの設定方法.txt」の 3 の「承認済みドメイン」に
+（あなたのGitHubの名前）.github.io を追加してください。
